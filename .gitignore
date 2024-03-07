@@ -1,0 +1,7 @@
+venv
+git
+todo.md
+Makefile
+
+.AI_analyzer/*
+!AI_analyzer/layouts
