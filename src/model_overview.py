@@ -56,7 +56,7 @@ class Analyzer:
             os.system(f"mkdir   {self.ROOT_DIR}/.AI_analyzer")
         if not os.path.exists(f"{self.ROOT_DIR}/.AI_analyzer/comparisons"):
             os.system(f"mkdir   {self.ROOT_DIR}/.AI_analyzer/comparisons")
-        if not os.path.exists(f"{self.ROOT_DIR}/.AI_analyzer/.AI_analyzer/layouts"):
+        if not os.path.exists(f"{self.ROOT_DIR}/.AI_analyzer/layouts"):
             self.__clone_layouts()
 
         if include_report: self.__write_report(y_true, y_pred)
@@ -125,5 +125,5 @@ class Analyzer:
     
     def __clone_layouts(self):
         os.system(f"git clone https://github.com/coding610/AI_analyzer {self.ROOT_DIR}/.AI_analyzer/repo")
-        os.system(f"mv {self.ROOT_DIR}/.AI_analyzer/repo/.AI_analyzer/cloud-layouts {self.ROOT_DIR}/.AI_analyzer")
+        os.system(f"mv {self.ROOT_DIR}/.AI_analyzer/repo/cloud-layouts {self.ROOT_DIR}/.AI_analyzer/layouts")
         os.system(f"rm -rf {self.ROOT_DIR}/.AI_analyzer/repo")
