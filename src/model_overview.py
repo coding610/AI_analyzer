@@ -1,4 +1,3 @@
-
 import os
 import json
 from typing import Optional
@@ -126,5 +125,5 @@ class Analyzer:
     
     def __clone_layouts(self):
         os.system(f"git clone https://github.com/coding610/AI_analyzer {self.ROOT_DIR}/.AI_analyzer/repo")
-        os.system(f"mv {self.ROOT_DIR}/.AI_analyzer/repo/.AI_analyzer/layouts {self.ROOT_DIR}/.AI_analyzer")
+        os.system(f"mv {self.ROOT_DIR}/.AI_analyzer/repo/.AI_analyzer/cloud-layouts {self.ROOT_DIR}/.AI_analyzer")
         os.system(f"rm -rf {self.ROOT_DIR}/.AI_analyzer/repo")
