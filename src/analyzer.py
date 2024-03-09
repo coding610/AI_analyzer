@@ -49,7 +49,7 @@ class Analyzer:
         y_pred: np.ndarray | list,
         labels: list[str],
         model_name: str,
-        view_result: bool = True,
+        view_result: bool = False,
         plot_metrics: bool = False,
         include_report: bool = True,
         include_confusion_matrix: bool = True,
@@ -105,7 +105,9 @@ class Analyzer:
             display_labels   = labels
         ).plot(cmap="copper")
 
+        plt.title(f"Model {self.MODEL_NAME}")
         plt.savefig(f"{self.ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/confusion-matrix.png")
+
         if not plot: plt.ion()
 
         self.__dump_json({
