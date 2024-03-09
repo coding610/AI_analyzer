@@ -1,7 +1,6 @@
 # Model Comparison: {model_name1} and {model_name2} 
-Please be advised that this document has been automatically generated.
-
 ## Table Of Contents
+[Scores](##Score-Comparison)
 [Confusion Matrix Comparison](##Confusion-Matrix-Comparison)
 
 ## Confusion Matrix Comparison
