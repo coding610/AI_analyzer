@@ -34,14 +34,6 @@ class Analyzer:
                     .replace("{ROOT_DIR}", os.path.relpath(self.ROOT_DIR, f"{self.ROOT_DIR}/.AI_analyzer/comparisons"))
                 )
 
-        with open(f"{self.ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}-comparison-abs.md", "w") as f:
-            with open(f"{self.ROOT_DIR}/templates/comparison.md", "r") as layout:
-                f.write(layout.read()
-                    .replace("{model_name1}", model_name1)
-                    .replace("{model_name2}", model_name2)
-                    .replace("{ROOT_DIR}", self.ROOT_DIR)
-                )
-
     ##########################
     ## OVERVIEW             ##
     ##########################
@@ -112,7 +104,6 @@ class Analyzer:
             display_labels   = labels
         ).plot(cmap="copper")
 
-        plt.title(f"Model {self.MODEL_NAME}")
         plt.savefig(f"{self.ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/confusion-matrix.png")
 
         if not plot: plt.ion()
