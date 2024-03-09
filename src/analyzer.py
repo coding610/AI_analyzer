@@ -1,8 +1,7 @@
 import os
 import json
-from typing import Optional
+import md2pdf
 
-from IPython.display import Markdown
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -22,9 +21,8 @@ class Analyzer:
         self,
         model_name1: str,
         model_name2: str,
-        view_result: bool = False,
         overwrite: bool = False
-    ) -> Optional[Markdown]:
+    ):
         if not overwrite and os.path.exists(f"{self.ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}-comparison.md"):
             raise Exception(f"Error: Trying to overwrite comparison {model_name1}-{model_name2}, but overwrite parameter is set to false.")
 
@@ -44,10 +42,6 @@ class Analyzer:
                     .replace("{ROOT_DIR}", self.ROOT_DIR)
                 )
 
-        if not view_result: return 
-        with open(f"{self.ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}-comparison.md", "r") as f:
-            return Markdown(f.read())
-
     ##########################
     ## OVERVIEW             ##
     ##########################
@@ -57,12 +51,11 @@ class Analyzer:
         y_pred: np.ndarray | list,
         labels: list[str],
         model_name: str,
-        view_result: bool = False,
         plot_metrics: bool = False,
         include_report: bool = True,
         include_confusion_matrix: bool = True,
         overwrite: bool = False # When enabled, it overwrites the model analyzation folder if it exists
-    ) -> Optional[Markdown]:
+    ):
         self.MODEL_NAME = model_name;
 
         if os.path.exists(f"{self.ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}"):
@@ -85,7 +78,7 @@ class Analyzer:
         if include_confusion_matrix: self.__write_confusion_matrix(y_true, y_pred, labels, plot_metrics)
 
         # Because markdown is best treated with relative paths,
-        # we do this shinaniganse
+        # so we do this shinaniganse
         with open(f"{self.ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/result.md", "w") as f:
             with open(f"{self.ROOT_DIR}/templates/overview.md", "r") as layout:
                 f.write(layout.read()
@@ -93,16 +86,13 @@ class Analyzer:
                     .replace("{ROOT_DIR}", os.path.relpath(self.ROOT_DIR, f"{self.ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}"))
                 )
 
+        # Create absolute path for pdf conversion 
         with open(f"{self.ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/result-abs.md", "w") as f:
             with open(f"{self.ROOT_DIR}/templates/overview.md", "r") as layout:
                 f.write(layout.read()
                     .replace("{model_name}", self.MODEL_NAME)
                     .replace("{ROOT_DIR}", self.ROOT_DIR)
                 )
-
-        if not view_result: return
-        with open(f"{self.ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/result-abs.md", "r") as f:
-            return Markdown(f.read())
 
     ##########################
     ## METRICS              ##
@@ -120,7 +110,7 @@ class Analyzer:
         ConfusionMatrixDisplay(
             confusion_matrix = conf_matrix,
             display_labels   = labels
-        ).plot(cmap="Blues")
+        ).plot(cmap="copper")
 
         plt.title(f"Model {self.MODEL_NAME}")
         plt.savefig(f"{self.ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/confusion-matrix.png")
