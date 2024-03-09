@@ -6,10 +6,12 @@
 - [Confusion Matrix](##Confusion-Matrix)
 
 ## Score
-- Accuracy    : {data["scores"]["accuracy"]}
-- Precision   : {data["scores"]["precision"]}
-- Recall      : {data["scores"]["recall"]}
-- F1-Score    : {data["scores"]["f1-score"]}
+| Type      | Score                             |
+|-----------|-----------------------------------|
+| Accuracy  |  {data["scores"]["accuracy"]}     |
+| Precision |  {data["scores"]["precision"]}    |
+| Recall    |  {data["scores"]["recall"]}       |
+| F1-Score  |  {data["scores"]["f1-score"]}     |
 
 ## Confusion Matrix
 ![Confusion Matrix]({ROOT_DIR}/.AI_analyzer/{model_name}/confusion-matrix.png)
