@@ -25,17 +25,21 @@ class Analyzer:
         model_name1: str,
         model_name2: str,
         overwrite: bool = False
-    ):
-        if not os.path.exists(f"{self.ROOT_DIR}/.AI_analyzer/comparisons"):
-            os.system(f"mkdir   {self.ROOT_DIR}/.AI_analyzer/comparisons")
-        if not overwrite and os.path.exists(f"{self.ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}-comparison.md"):
+    ) -> None:
+        self.ROOT_DIR = os.path.relpath(self.STABLE_ROOT_DIR, f"{self.STABLE_ROOT_DIR}/comparisons/{model_name1}-{model_name2}-comparison.md")
+
+        if not os.path.exists(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons"):
+            os.system(f"mkdir   {self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons")
+        if not overwrite and os.path.exists(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}-comparison.md"):
             raise Exception(f"Error: Trying to overwrite comparison {model_name1}-{model_name2}, but overwrite parameter is set to false.")
 
-        # self.ROOT_DIR = os.path.relpath(self.STABLEROOT_DIR, f"{self.AROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}")
-        # with open(f"{self.ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}-comparison.md", "w") as f:
-        #     with open(f"{self.ROOT_DIR}/templates/comparison.md", "r") as layout:
-        #         f.write(layout.read())
-
+        connectMD.MDConnection(
+            target_class=self,
+            target_members=connectMD.getmembers(self),
+            read_file=f"{self.STABLE_ROOT_DIR}/templates/comparison.md",
+            write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}-comparison.md",
+            connect=True
+        )
     ##########################
     ## OVERVIEW             ##
     ##########################
@@ -50,39 +54,38 @@ class Analyzer:
         include_confusion_matrix: bool = True,
         overwrite: bool = False # When enabled, it overwrites the model analyzation folder if it exists
     ):
-        self.__check_validility(model_name, overwrite)
         self.MODEL_NAME = model_name;
+        self.ROOT_DIR = os.path.relpath(self.STABLE_ROOT_DIR, f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}")
 
+        self.__check_validility(model_name, overwrite)
         if include_scores: self.__write_scores(y_true, y_pred, plot_metrics)
         if include_confusion_matrix: self.__write_confusion_matrix(y_true, y_pred, labels, plot_metrics)
 
-        self.ROOT_DIR = os.path.relpath(self.STABLE_ROOT_DIR, f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}")
-        connection = connectMD.MDConnection(
+        connectMD.MDConnection(
             target_class=self,
             target_members=connectMD.getmembers(self),
             read_file=f"{self.STABLE_ROOT_DIR}/templates/overview.md",
-            write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/result.md"
+            write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/result.md",
+            connect=True
         )
-        connection.connect()
-        self.ROOT_DIR = copy.deepcopy(self.STABLE_ROOT_DIR)
 
     ##########################
     ## HELPERS              ##
     ##########################
     def __check_validility(self, model_name, overwrite):
-        if os.path.exists(f"{self.ROOT_DIR}/.AI_analyzer/{model_name}"):
+        if os.path.exists(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{model_name}"):
             if overwrite:
-                os.system(f"rm -r {self.ROOT_DIR}/.AI_analyzer/{model_name}")
-                os.system(f"mkdir {self.ROOT_DIR}/.AI_analyzer/{model_name}")
+                os.system(f"rm -r {self.STABLE_ROOT_DIR}/.AI_analyzer/{model_name}")
+                os.system(f"mkdir {self.STABLE_ROOT_DIR}/.AI_analyzer/{model_name}")
             else:
                 raise Exception(f"Error: Trying to overwrite model {model_name}, but overwrite parameter is set to false.")
         else:
-            os.system(f"mkdir {self.ROOT_DIR}/.AI_analyzer/{model_name}")
+            os.system(f"mkdir {self.STABLE_ROOT_DIR}/.AI_analyzer/{model_name}")
 
-        if not os.path.exists(f"{self.ROOT_DIR}/.AI_analyzer"):
-            os.system(f"mkdir   {self.ROOT_DIR}/.AI_analyzer")
-        if not os.path.exists(f"{self.ROOT_DIR}/.AI_analyzer/{model_name}/data.json"):
-            os.system(f"touch {self.ROOT_DIR}/.AI_analyzer/{model_name}/data.json")
+        if not os.path.exists(f"{self.STABLE_ROOT_DIR}/.AI_analyzer"):
+            os.system(f"mkdir   {self.STABLE_ROOT_DIR}/.AI_analyzer")
+        if not os.path.exists(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{model_name}/data.json"):
+            os.system(f"touch {self.STABLE_ROOT_DIR}/.AI_analyzer/{model_name}/data.json")
 
     ##########################
     ## METRICS              ##
@@ -102,27 +105,27 @@ class Analyzer:
             display_labels   = labels
         ).plot(cmap="copper")
 
-        plt.savefig(f"{self.ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/confusion-matrix.png")
+        plt.savefig(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/confusion-matrix.png")
 
         if not plot: plt.ion()
 
         # int(...) because its int64 (numpy int)
         self.__dump_json({
             "confusion-matrix": {
-                "0-0": int(conf_matrix[0][0]),
-                "0-1": int(conf_matrix[0][1]),
-                "1-0": int(conf_matrix[1][0]),
-                "1-1": int(conf_matrix[1][1])
+                "0-0": float(conf_matrix[0][0]),
+                "0-1": float(conf_matrix[0][1]),
+                "1-0": float(conf_matrix[1][0]),
+                "1-1": float(conf_matrix[1][1])
             }
         })
 
     def __write_scores(self, y_true: np.ndarray | list, y_pred: np.ndarray | list, plot: bool) -> None:
         self.__dump_json({
             "scores": {
-                "accuracy": str(round(accuracy_score(y_true, y_pred), 3)),
-                "precision": str(round(precision_score(y_true, y_pred), 3)),
-                "recall": str(round(recall_score(y_true, y_pred), 3)),
-                "f1-score": str(round(f1_score(y_true, y_pred), 3))
+                "accuracy": round(accuracy_score(y_true, y_pred), 3),
+                "precision": round(precision_score(y_true, y_pred), 3),
+                "recall": round(recall_score(y_true, y_pred), 3),
+                "f1-score": round(f1_score(y_true, y_pred), 3)
             }
         }, plot, "scores")
 
@@ -133,7 +136,7 @@ class Analyzer:
         if print_data:
             print(json.dumps(new_data[key], indent=4, default=str))
 
-        with open(f"{self.ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "r+") as f:
+        with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "r+") as f:
             if f.read() == "":
                 f.seek(0)
                 json.dump(new_data, f, indent=4)
@@ -143,9 +146,9 @@ class Analyzer:
             data = json.load(f)
 
         data.update(new_data)
-        with open(f"{self.ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "w") as f:
+        with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "w") as f:
             json.dump(data, f, indent=4)
 
     def __get_current_data(self):
-        with open(f"{self.ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "r") as f:
+        with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "r") as f:
             return json.loads(f.read())

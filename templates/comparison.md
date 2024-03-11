@@ -5,13 +5,20 @@
 - [Score](##Score-Comparison)
 - [Confusion Matrix Comparison](##Confusion-Matrix-Comparison)
 
+# TODO
+self.__get_model_data({{ params.MODEL_NAME1 }})
+self.__get_model_data({{ params.MODEL_NAME2 }})
+and then of course input params as a class/struct
+on top of the inputed_members to the mdConnection
+a simple .update() ???
+
 ## Score Comparison
 | Type      | Score {model_name1}               | Score {model_name2}               | Offset
 |-----------|-----------------------------------|-----------------------------------|--------
-| Accuracy  |  {model1_data["scores"]["accuracy"]}     |   {model2_data["scores"]["accuracy"]}    | 
-| Precision |  {model1_data["scores"]["precision"]}    |   {model2_data["scores"]["precision"]}   |
-| Recall    |  {model1_data["scores"]["recall"]}       |   {model2_data["scores"]["recall"]}      |
-| F1-Score  |  {model1_data["scores"]["f1-score"]}     |   {model2_data["scores"]["f1-score"]}    |
+| Accuracy  | {{ self.__get_current_data["scores"]["accuracy"]  }} | {{ self.__get_current_data["scores"]["accuracy"]}    | 
+| Precision | {{ self.__get_current_data["scores"]["precision"] }} | {{ self.__get_current_data["scores"]["precision"]}   |
+| Recall    | {{ self.__get_current_data["scores"]["recall"]    }} | {{ self.__get_current_data["scores"]["recall"]}      |
+| F1-Score  | {{ self.__get_current_data["scores"]["f1-score"]  }} | {{ self.__get_current_data["scores"]["f1-score"]}    |
 
 ## Confusion Matrix Comparison
 Model {model_name1}                                             | Model {model_name2}
