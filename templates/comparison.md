@@ -6,12 +6,12 @@
 - [Confusion Matrix Comparison](##Confusion-Matrix-Comparison)
 
 ## Score Comparison
-| Type      | Score {model_name1}              | Score {model_name2}              |
-|-----------|-----------------------------------|-----------------------------------|
-| Accuracy  |  {data["scores"]["accuracy"]}     |   {data["scores"]["accuracy"]}    |
-| Precision |  {data["scores"]["precision"]}    |   {data["scores"]["precision"]}   |
-| Recall    |  {data["scores"]["recall"]}       |   {data["scores"]["recall"]}      |
-| F1-Score  |  {data["scores"]["f1-score"]}     |   {data["scores"]["f1-score"]}    |
+| Type      | Score {model_name1}               | Score {model_name2}               | Offset
+|-----------|-----------------------------------|-----------------------------------|--------
+| Accuracy  |  {model1_data["scores"]["accuracy"]}     |   {model2_data["scores"]["accuracy"]}    | 
+| Precision |  {model1_data["scores"]["precision"]}    |   {model2_data["scores"]["precision"]}   |
+| Recall    |  {model1_data["scores"]["recall"]}       |   {model2_data["scores"]["recall"]}      |
+| F1-Score  |  {model1_data["scores"]["f1-score"]}     |   {model2_data["scores"]["f1-score"]}    |
 
 ## Confusion Matrix Comparison
 Model {model_name1}                                             | Model {model_name2}
