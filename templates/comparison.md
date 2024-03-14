@@ -5,12 +5,6 @@
 - [Score](##Score-Comparison)
 - [Confusion Matrix Comparison](##Confusion-Matrix-Comparison)
 
-# TODO
-self.__get_model_data({{ params.MODEL_NAME1 }})
-self.__get_model_data({{ params.MODEL_NAME2 }})
-and then of course input params as a class/struct
-on top of the inputed_members to the mdConnection
-a simple .update() ???
 
 ## Score Comparison
 | Type      | Score {model_name1}               | Score {model_name2}               | Offset
