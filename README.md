@@ -56,6 +56,7 @@ The first usage example will result in this type of markdown file
 
 The second usage example will result in this type of markdown file
 > **_NOTE:_** As it is exported to png, it wont really look the same. For the full experience, visit ./.AI_analyzer/comparisons/1.0-1.1-comparison.md
+
 > **_NOTE:_**  The two model that this is comparing is the same
 ![](./.AI_analyzer/comparisons/1.0-1.1-comparison.png)
 
