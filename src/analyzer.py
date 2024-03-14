@@ -2,6 +2,7 @@ import os
 import json
 import copy
 
+import utils
 import connectMD
 
 from matplotlib import pyplot as plt
@@ -35,7 +36,7 @@ class Analyzer:
 
         connectMD.MDConnection(
             target_class=self,
-            target_members=connectMD.getmembers(self),
+            target_members=connectMD.getmembers(self, locals()),
             read_file=f"{self.STABLE_ROOT_DIR}/templates/comparison.md",
             write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}-comparison.md",
             connect=True
@@ -63,7 +64,7 @@ class Analyzer:
 
         connectMD.MDConnection(
             target_class=self,
-            target_members=connectMD.getmembers(self),
+            target_members=connectMD.getmembers(self, locals()),
             read_file=f"{self.STABLE_ROOT_DIR}/templates/overview.md",
             write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/result.md",
             connect=True
@@ -152,3 +153,10 @@ class Analyzer:
     def __get_current_data(self):
         with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "r") as f:
             return json.loads(f.read())
+
+    def __get_data(self, model_name: str):
+        try:
+            with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{model_name}/data.json", "r") as f:
+                return json.loads(f.read())
+        except:
+            raise Exception("Error: model_name \"{model_name}\" not found in function self.__get_data")

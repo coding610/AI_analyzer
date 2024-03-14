@@ -1,20 +1,24 @@
-[//]: # (This is a comment)
+{< MNAME1 = params["model_name1"] >}
+{< MNAME2 = params["model_name2"] >}
 
-# Model Comparison: {model_name1} and {model_name2} 
+
+# Model Comparison: {{ MNAME1 }} and {{ MNAME2 }} 
 ## Table Of Contents
 - [Score](##Score-Comparison)
 - [Confusion Matrix Comparison](##Confusion-Matrix-Comparison)
 
-
 ## Score Comparison
-| Type      | Score {model_name1}               | Score {model_name2}               | Offset
-|-----------|-----------------------------------|-----------------------------------|--------
-| Accuracy  | {{ self.__get_current_data["scores"]["accuracy"]  }} | {{ self.__get_current_data["scores"]["accuracy"]}    | 
-| Precision | {{ self.__get_current_data["scores"]["precision"] }} | {{ self.__get_current_data["scores"]["precision"]}   |
-| Recall    | {{ self.__get_current_data["scores"]["recall"]    }} | {{ self.__get_current_data["scores"]["recall"]}      |
-| F1-Score  | {{ self.__get_current_data["scores"]["f1-score"]  }} | {{ self.__get_current_data["scores"]["f1-score"]}    |
+{< scoresm1 = self.__get_data(params["model_name1"])["scores"] >}
+{< scoresm2 = self.__get_data(params["model_name2"])["scores"] >}
+
+| Type      | Score {{ MNAME1 }}          | Score {{ MNAME2 }}          | Offset                                              |
+|-----------|-----------------------------|-----------------------------|-----------------------------------------------------|
+| Accuracy  | {{ scoresm1["accuracy"]  }} | {{ scoresm2["accuracy"]  }} | {{ scoresm1["accuracy"] - scoresm2["accuracy"]   }} |
+| Precision | {{ scoresm1["precision"] }} | {{ scoresm2["precision"] }} | {{ scoresm1["precision"] - scoresm2["precision"] }} |
+| Recall    | {{ scoresm1["recall"]    }} | {{ scoresm2["recall"]    }} | {{ scoresm1["recall"] - scoresm2["recall"]       }} |
+| F1-Score  | {{ scoresm1["f1-score"]  }} | {{ scoresm2["f1-score"]  }} | {{ scoresm1["f1-score"] - scoresm2["f1-score"]   }} |
 
 ## Confusion Matrix Comparison
-Model {model_name1}                                             | Model {model_name2}
-:--------------------------------------------------------------:|:--------------------------------------------------------------:
-![]({ROOT_DIR}/.AI_analyzer/{model_name1}/confusion-matrix.png) | ![]({ROOT_DIR}/.AI_analyzer/{model_name2}/confusion-matrix.png)
+Model {{ MNAME1 }}                                                      | Model {{ MNAME2 }}
+:----------------------------------------------------------------------:|:--------------------------------------------------------------:
+![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ MNAME1 }}/confusion-matrix.png) | ![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ MNAME2 }}/confusion-matrix.png)
