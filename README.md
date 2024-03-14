@@ -43,7 +43,7 @@ analyzer.model_overview(
 
 You could also compare models with this command
 ```python
-analyzer.compare_models("1.0", "1.1", overwrite=True)
+analyzer.compare_models("1.0", "1.1")
 ```
 
 ## Example Results
@@ -52,28 +52,14 @@ result. This is just an arbetary example models result.
 
 The first usage example will result in this type of markdown file
 <div style="border: 1px solid #2f3044; padding: 20px;">
-
-# Model Overview: 1.0
-## Table Of Contents
-- [Score](##Score)
-- [Confusion Matrix](##Confusion-Matrix)
-
-## Score
-| Type      | Score                         |
-|-----------|-------------------------------|
-| Accuracy  |  0.962    |
-| Precision |  0.962    |
-| Recall    |  0.965    |
-| F1-Score  |  0.964    |
-
-## Confusion Matrix
-![Confusion Matrix](./.AI_analyzer/1.0/confusion-matrix.png)
-
+![](./.AI_analyzer/1.0/result.png)
 </div>
 
 The second usage example will result in this type of markdown file
 > **_NOTE:_**  The two model that this is comparing is the same
 <div style="border: 1px solid #2f3044; padding: 20px;">
+![](./.AI_analyzer/comparisons/1.0-1.1-comparison.png)
+</div>
 
 # Model Comparison: 1.0 and 1.1 
 ## Table Of Contents
