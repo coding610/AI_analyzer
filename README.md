@@ -51,17 +51,13 @@ Note that the results will of course depend on your own models
 result. This is just an arbetary example models result.
 
 The first usage example will result in this type of markdown file
-<div style="border: 1px solid #2f3044; padding: 20px;">
-
+> **_NOTE:_** As it is exported to png, it wont really look the same. For the full experience, visit ./.AI_analyzer/1.0/result.md
 ![](./.AI_analyzer/1.0/result.png)
-</div>
 
 The second usage example will result in this type of markdown file
+> **_NOTE:_** As it is exported to png, it wont really look the same. For the full experience, visit ./.AI_analyzer/1.0/result.md
 > **_NOTE:_**  The two model that this is comparing is the same
-<div style="border: 1px solid #2f3044; padding: 20px;">
-
 ![](./.AI_analyzer/comparisons/1.0-1.1-comparison.png)
-</div>
 
 # Model Comparison: 1.0 and 1.1 
 ## Table Of Contents
