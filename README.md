@@ -52,12 +52,14 @@ result. This is just an arbetary example models result.
 
 The first usage example will result in this type of markdown file
 <div style="border: 1px solid #2f3044; padding: 20px;">
+
 ![](./.AI_analyzer/1.0/result.png)
 </div>
 
 The second usage example will result in this type of markdown file
 > **_NOTE:_**  The two model that this is comparing is the same
 <div style="border: 1px solid #2f3044; padding: 20px;">
+
 ![](./.AI_analyzer/comparisons/1.0-1.1-comparison.png)
 </div>
 
