@@ -4,7 +4,7 @@ import utils
 
 
 """
-The takout from this should be
+The learning from this should be
 that regex is really awesome
 """
 
@@ -31,48 +31,65 @@ class MDConnection:
             f.write(contents)
 
     def __replace_expressions(self, contents: str) -> str:
-        # all of the \s* is for multiply spaces to execute
-        contents = re.sub(
-            r'\{%\s*if\s*(.*?)\s*%\}(.*?)(?:\{%\s*else if\s*(.*?)\s*%\}(.*?))*(?:\{%\s*else\s*%\}(.*?))?\{%\s*endif\s*%\}',
-            lambda match: self.__process_conditionals(match),
-            contents,
-            flags=re.DOTALL
-        )
-        contents = re.sub(
-            r'\{\<(.*?)\>\}',
-            lambda match: self.__execute_expression(match),
-            contents,
-            flags=re.DOTALL
-        )
-        contents = re.sub(
-            r'\{\{(.*?)\}\}',
-            lambda match: self.__evaluate_expression(match),
-            contents,
-            flags=re.DOTALL
-        )
+        contents = self.__apply_macros(contents)
+
+        def find_first_occuring(contents, pattern, func):
+            match = re.search(pattern, contents, flags=re.DOTALL)
+            if match: contents = contents[:match.start()] + func(match) + contents[match.end():]
+            return contents
+
+        for i, line in enumerate(contents.split("\n")):
+            if line.find("{%") != -1 and line.find("{%") < wrapn(line.find("{<")) and line.find("{%") < wrapn(line.find("{{")):
+                contents = contents[:i] + find_first_occuring(
+                    contents[i:],
+                    r'\{%\s*if\s*(.*?)\s*%\}(.*?)(?:\{%\s*else\s*%\}(.*?))?\{%\s*endif\s*%\}',
+                    self.__process_conditional
+                )
+            elif line.find("{<") != -1 and line.find("{<") < wrapn(line.find("{%")) and line.find("{<") < wrapn(line.find("{{")):
+                contents = contents[:i] + find_first_occuring(
+                    contents[i:],
+                    r'\{\<(.*?)\>\}',
+                    self.__execute_expression
+                )
+            elif line.find("{{") != -1 and line.find("{{") < wrapn(line.find("{%")) and line.find("{{") < wrapn(line.find("{<")):
+                contents = contents[:i] + find_first_occuring(
+                    contents[i:],
+                    r'\{\{(.*?)\}\}',
+                    self.__evaluate_expression
+                )
 
         return contents.replace(self.REMOVEME_SYNTAX + "\n", "").replace(self.REMOVEME_SYNTAX, "")
 
+    def __apply_macros(self, contents: str) -> str:
+        return contents.replace("self.__", "self._Analyzer__")
+
+    def __process_conditional(self, match) -> str:
+        # [0] -> if statement
+        # [1] -> if body
+        # [2] -> else body
+
+        if match.groups()[0] != None and self.__eval(match.groups()[0], self.target_members):
+            return self.__replace_expressions(match.groups()[1].strip())
+        elif match.groups()[2] != None:
+            return self.__replace_expressions(match.groups()[2].strip())
+        else:
+            return ""
+
     def __execute_expression(self, match) -> str:
         for line in match.group(1).split('\n'):
-            line = line.strip().replace("self.__", "self._Analyzer__")
-            exec(line, self.target_members)
+            self.__exec(line.strip(), self.target_members)
         return self.REMOVEME_SYNTAX
 
-    def __process_conditionals(self, match) -> str:
-        conditions = match.groups()[::2]            # Wont explain what the :: does, play with it!
-        contents = match.groups()[1::2]             # Same for this
-
-        for condition, content in zip(conditions, contents):
-            if condition and eval(condition.strip(), self.target_members):
-                return content.strip()
-
-        return contents[-1].strip() if contents[-1] else ""
-
     def __evaluate_expression(self, match) -> str:
-        expr = match.group(1).strip().replace("self.__", "self._Analyzer__")
-        return str(eval(expr, self.target_members))
+        return str(self.__eval(match.group(1).strip(), self.target_members))
 
+    def __eval(self, expression, params):
+        # TODO: Error Handleling
+        eval(expression, params)
+
+    def __exec(self, expression, params):
+        # TODO: Error Handleling
+        exec(expression, params)
 
 def getmembers(object: object, extras: dict={}, extras_name: str = "params"):
     """
@@ -84,3 +101,6 @@ def getmembers(object: object, extras: dict={}, extras_name: str = "params"):
     return utils.appendd({
         name : value for name, value in inspect.getmembers_static(object)
     }, {extras_name: extras} )
+
+def wrapn(i: int) -> int:
+    return 9999999 if i == -1 else i

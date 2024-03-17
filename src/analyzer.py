@@ -1,6 +1,7 @@
 import os
 import json
 import copy
+from typing import Optional
 
 import utils
 import connectMD
@@ -154,9 +155,9 @@ class Analyzer:
         with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "r") as f:
             return json.loads(f.read())
 
-    def __get_data(self, model_name: str):
+    def __get_data(self, model_name: str) -> Optional[str]:
         try:
             with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{model_name}/data.json", "r") as f:
                 return json.loads(f.read())
         except:
-            raise Exception("Error: model_name \"{model_name}\" not found in function self.__get_data")
+            return None
