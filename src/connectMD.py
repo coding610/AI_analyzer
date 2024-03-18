@@ -33,30 +33,25 @@ class MDConnection:
     def __replace_expressions(self, contents: str) -> str:
         contents = self.__apply_macros(contents)
 
-        def find_first_occuring(contents, pattern, func):
-            match = re.search(pattern, contents, flags=re.DOTALL)
-            if match: contents = contents[:match.start()] + func(match) + contents[match.end():]
-            return contents
-
-        for i, line in enumerate(contents.split("\n")):
-            if line.find("{%") != -1 and line.find("{%") < wrapn(line.find("{<")) and line.find("{%") < wrapn(line.find("{{")):
-                contents = contents[:i] + find_first_occuring(
-                    contents[i:],
-                    r'\{%\s*if\s*(.*?)\s*%\}(.*?)(?:\{%\s*else\s*%\}(.*?))?\{%\s*endif\s*%\}',
-                    self.__process_conditional
-                )
-            elif line.find("{<") != -1 and line.find("{<") < wrapn(line.find("{%")) and line.find("{<") < wrapn(line.find("{{")):
-                contents = contents[:i] + find_first_occuring(
-                    contents[i:],
-                    r'\{\<(.*?)\>\}',
-                    self.__execute_expression
-                )
-            elif line.find("{{") != -1 and line.find("{{") < wrapn(line.find("{%")) and line.find("{{") < wrapn(line.find("{<")):
-                contents = contents[:i] + find_first_occuring(
-                    contents[i:],
-                    r'\{\{(.*?)\}\}',
-                    self.__evaluate_expression
-                )
+        # all of the \s* is for multiply spaces to execute
+        contents = re.sub(
+        	r'\{%\s*if\s*(.*?)\s*%\}(.*?)(?:\{%\s*else\s*%\}(.*?))?\{%\s*endif\s*%\}',
+            lambda match: self.__process_conditional(match),
+            contents,
+            flags=re.DOTALL
+        )
+        contents = re.sub(
+            r'\{\<(.*?)\>\}',
+            lambda match: self.__execute_expression(match),
+            contents,
+            flags=re.DOTALL
+        )
+        contents = re.sub(
+            r'\{\{(.*?)\}\}',
+            lambda match: self.__evaluate_expression(match),
+            contents,
+            flags=re.DOTALL
+        )
 
         return contents.replace(self.REMOVEME_SYNTAX + "\n", "").replace(self.REMOVEME_SYNTAX, "")
 
@@ -68,28 +63,28 @@ class MDConnection:
         # [1] -> if body
         # [2] -> else body
 
-        if match.groups()[0] != None and self.__eval(match.groups()[0], self.target_members):
-            return self.__replace_expressions(match.groups()[1].strip())
+        if match.groups()[0] != None and self.__eval(match.groups()[0]):
+            return match.groups()[1].strip()
         elif match.groups()[2] != None:
-            return self.__replace_expressions(match.groups()[2].strip())
+            return match.groups()[2].strip()
         else:
             return ""
 
     def __execute_expression(self, match) -> str:
         for line in match.group(1).split('\n'):
-            self.__exec(line.strip(), self.target_members)
+            self.__exec(line.strip())
         return self.REMOVEME_SYNTAX
 
     def __evaluate_expression(self, match) -> str:
-        return str(self.__eval(match.group(1).strip(), self.target_members))
+        return self.__eval(match.group(1).strip())
 
-    def __eval(self, expression, params):
+    def __eval(self, expression) -> str:
         # TODO: Error Handleling
-        eval(expression, params)
+        return str(eval(expression, self.target_members))
 
-    def __exec(self, expression, params):
+    def __exec(self, expression):
         # TODO: Error Handleling
-        exec(expression, params)
+        exec(expression, self.target_members)
 
 def getmembers(object: object, extras: dict={}, extras_name: str = "params"):
     """

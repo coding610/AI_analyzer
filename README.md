@@ -60,28 +60,6 @@ The second usage example will result in this type of markdown file
 > **_NOTE:_**  The two model that this is comparing is the same
 ![](./.AI_analyzer/comparisons/1.0-1.1-comparison.png)
 
-# Model Comparison: 1.0 and 1.1 
-## Table Of Contents
-- [Score](##Score-Comparison)
-- [Confusion Matrix Comparison](##Confusion-Matrix-Comparison)
-
-## Score Comparison
-
-
-| Type      | Score 1.0          | Score 1.1          | Offset                                              |
-|-----------|-----------------------------|-----------------------------|-----------------------------------------------------|
-| Accuracy  | 0.962 | 0.962 | 0.0 |
-| Precision | 0.962 | 0.962 | 0.0 |
-| Recall    | 0.965 | 0.965 | 0.0 |
-| F1-Score  | 0.964 | 0.964 | 0.0 |
-
-## Confusion Matrix Comparison
-Model 1.0                                                      | Model 1.1
-:----------------------------------------------------------------------:|:--------------------------------------------------------------:
-![](./.AI_analyzer/1.0/confusion-matrix.png) | ![](./.AI_analyzer/1.1/confusion-matrix.png)
-
-</div>
-
 ## Future Features
 - Custom templates
 - Custom metrics
