@@ -52,12 +52,14 @@ result. This is just an arbetary example models result.
 
 The first usage example will result in this type of markdown file
 > **_NOTE:_** As it is exported to png, it wont really look the same. For the full experience, visit ./.AI_analyzer/1.0/result.md
+
 ![](./previews/1.0-result.png)
 
 The second usage example will result in this type of markdown file
 > **_NOTE:_** As it is exported to png, it wont really look the same. For the full experience, visit ./.AI_analyzer/comparisons/1.0-1.1.md
 
 > **_NOTE:_**  The two models that this is comparing is the same
+
 ![](./previews/1.0-1.1.png)
 
 ## Future Features
