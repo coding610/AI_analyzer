@@ -28,18 +28,18 @@ class Analyzer:
         model_name2: str,
         overwrite: bool = False
     ) -> None:
-        self.ROOT_DIR = os.path.relpath(self.STABLE_ROOT_DIR, f"{self.STABLE_ROOT_DIR}/comparisons/{model_name1}-{model_name2}-comparison.md")
+        self.ROOT_DIR = os.path.relpath(self.STABLE_ROOT_DIR, f"{self.STABLE_ROOT_DIR}/comparisons/{model_name1}-{model_name2}.md")
 
         if not os.path.exists(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons"):
             os.system(f"mkdir   {self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons")
-        if not overwrite and os.path.exists(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}-comparison.md"):
+        if not overwrite and os.path.exists(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}.md"):
             raise Exception(f"Error: Trying to overwrite comparison {model_name1}-{model_name2}, but overwrite parameter is set to false.")
 
         connectMD.MDConnection(
             target_class=self,
             target_members=connectMD.getmembers(self, locals()),
             read_file=f"{self.STABLE_ROOT_DIR}/templates/comparison.md",
-            write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}-comparison.md",
+            write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}.md",
             connect=True
         )
     ##########################
