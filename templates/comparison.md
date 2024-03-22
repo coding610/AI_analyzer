@@ -1,5 +1,7 @@
-{< MNAME1 = params["model_name1"] >}
-{< MNAME2 = params["model_name2"] >}
+{<
+MNAME1 = params["model_name1"]
+MNAME2 = params["model_name2"] 
+>}
 
 # Model Comparison: {{ MNAME1 }} and {{ MNAME2 }} 
 ## Table Of Contents

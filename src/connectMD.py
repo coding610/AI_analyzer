@@ -33,19 +33,18 @@ class MDConnection:
     def __replace_expressions(self, contents: str) -> str:
         contents = self.__apply_macros(contents)
 
-        # all of the \s* is for multiply spaces to execute
         contents = re.sub(
         	r'\{%\s*if\s*(.*?)\s*%\}(.*?)(?:\{%\s*else\s*%\}(.*?))?\{%\s*endif\s*%\}',
             lambda match: self.__process_conditional(match),
             contents,
             flags=re.DOTALL
-        )
+        );
         contents = re.sub(
             r'\{\<(.*?)\>\}',
             lambda match: self.__execute_expression(match),
             contents,
             flags=re.DOTALL
-        )
+        );
         contents = re.sub(
             r'\{\{(.*?)\}\}',
             lambda match: self.__evaluate_expression(match),
@@ -63,24 +62,25 @@ class MDConnection:
         # [1] -> if body
         # [2] -> else body
 
-        if match.groups()[0] != None and self.__eval(match.groups()[0]):
-            return match.groups()[1].strip()
+        if self.__eval(match.groups()[0]):
+            return match.groups()[1]
         elif match.groups()[2] != None:
-            return match.groups()[2].strip()
+            return match.groups()[2]
         else:
             return ""
 
     def __execute_expression(self, match) -> str:
         for line in match.group(1).split('\n'):
             self.__exec(line.strip())
+
         return self.REMOVEME_SYNTAX
 
     def __evaluate_expression(self, match) -> str:
-        return self.__eval(match.group(1).strip())
+        return str(self.__eval(match.group(1).strip()))
 
     def __eval(self, expression) -> str:
         # TODO: Error Handleling
-        return str(eval(expression, self.target_members))
+        return eval(expression, self.target_members)
 
     def __exec(self, expression):
         # TODO: Error Handleling
@@ -96,6 +96,3 @@ def getmembers(object: object, extras: dict={}, extras_name: str = "params"):
     return utils.appendd({
         name : value for name, value in inspect.getmembers_static(object)
     }, {extras_name: extras} )
-
-def wrapn(i: int) -> int:
-    return 9999999 if i == -1 else i
