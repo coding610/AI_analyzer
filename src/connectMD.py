@@ -1,7 +1,9 @@
 import re
 import inspect
+import sys
+
 import utils
-from typing import Any
+from utils import err
 
 
 """
@@ -37,21 +39,21 @@ class MDConnection:
         for i in range(len(contents.split("\n"))):
             contents = re.sub(
                 r"\{%\s*if\s*(.*?)\s*%\}(.*?)(?:\{%\s*else\s*%\}(.*?))?\{%\s*endif\s*%\}",
-                lambda match: self.__process_conditional(match),
+                lambda match: self.__process_conditional(match, i, match.start() - contents.rfind('\n', 0, match.start())),
                 "".join(contents.splitlines(True)[:i]),
                 flags=re.DOTALL,
                 count=1 # Only replace the first match
             ) + "".join(contents.splitlines(True)[i:])
             contents = re.sub(
                 r"\{\<(.*?)\>\}",
-                lambda match: self.__execute_expression(match),
+                lambda match: self.__execute_expression(match, i, match.start() - contents.rfind('\n', 0, match.start())),
                 "".join(contents.splitlines(True)[:i]),
                 flags=re.DOTALL,
                 count=1 # Only replace the first match
             ) + "".join(contents.splitlines(True)[i:])
             contents = re.sub(
                 r"\{\{(.*?)\}\}",
-                lambda match: self.__evaluate_expression(match),
+                lambda match: self.__evaluate_expression(match, i, match.start() - contents.rfind('\n', 0, match.start())),
                 "".join(contents.splitlines(True)[:i]),
                 flags=re.DOTALL,
                 count=1 # Only replace the first match
@@ -62,32 +64,38 @@ class MDConnection:
     def __apply_macros(self, contents: str) -> str:
         return contents.replace("self.__", "self._Analyzer__")
 
-    def __process_conditional(self, match) -> str:
+    def __process_conditional(self, match: re.Match, linenum: int, charnum: int) -> str:
         # [0] -> if statement
         # [1] -> if body
         # [2] -> else body
-
-        if self.__eval(match.groups()[0]):
+        if self.__eval(match.groups()[0], linenum, charnum):
             return match.groups()[1]
         elif match.groups()[2] != None:
             return match.groups()[2]
         else:
             return ""
 
-    def __execute_expression(self, match) -> str:
+    def __execute_expression(self, match: re.Match, linenum: int, charnum: int) -> str:
         for line in match.group(1).split('\n'):
-            self.__exec(line.strip())
+            self.__exec(line.strip(), linenum, charnum)
 
         return self.REMOVEME_SYNTAX
 
-    def __evaluate_expression(self, match) -> str:
-        return str(self.__eval(match.group(1).strip()))
+    def __evaluate_expression(self, match: re.Match, linenum: int, charnum: int) -> str:
+        return str(self.__eval(match.group(1).strip(), linenum, charnum))
 
-    def __eval(self, expression) -> str:
-        return eval(expression, self.target_members)
+    def __eval(self, expression: str, linenum: int, charnum: int) -> str | None:
+        try:
+            return eval(expression, self.target_members)
+        except Exception as e:
+            print(f"Error at {linenum}:{charnum}:\n    Expression \"{expression}\" did not evaluate")
+            return expression
 
-    def __exec(self, expression):
-        exec(expression, self.target_members)
+    def __exec(self, expression: str, linenum: int, charnum: int) -> None:
+        try:
+            exec(expression, self.target_members)
+        except Exception as e:
+            print(f"Error at {linenum}:{charnum}:\n    Expression \"{expression}\" did not execute")
 
 def getmembers(object: object, extras: dict={}, extras_name: str = "params"):
     """
