@@ -1,19 +1,20 @@
-# Model Overview: 1.0
+# Model Overview: {{ self.MODEL_NAME }}
 ## Table Of Contents
- - [Score](##Score) 
-- [Confusion Matrix](##Confusion-Matrix) 
+{% if params["include_scores"] %} - [Score](##Score) {% endif %}
+{% if params["include_confusion_matrix"] %}- [Confusion Matrix](##Confusion-Matrix) {% endif %}
 
-
+{% if params["include_scores"] %}
 ## Score
+{< scores = self._Analyzer__get_current_data()["scores"] >}
 | Type      | Score                         |
 |-----------|-------------------------------|
-| Accuracy  |  0.962    |
-| Precision |  0.962    |
-| Recall    |  0.965    |
-| F1-Score  |  0.964    |
+| Accuracy  |  {{ scores["accuracy"]  }}    |
+| Precision |  {{ scores["precision"] }}    |
+| Recall    |  {{ scores["recall"]    }}    |
+| F1-Score  |  {{ scores["f1-score"]  }}    |
+{% endif %}
 
-
-
+{% if params["include_confusion_matrix"] %}
 ## Confusion Matrix
-![Confusion Matrix](../../.AI_analyzer/1.0/confusion-matrix.png)
-
+![Confusion Matrix]({{ self.ROOT_DIR }}/.AI_analyzer/{{ self.MODEL_NAME }}/confusion-matrix.png)
+{% endif %}
