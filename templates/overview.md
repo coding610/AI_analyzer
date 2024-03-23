@@ -1,7 +1,7 @@
 # Model Overview: {{ self.MODEL_NAME }}
 ## Table Of Contents
 {% if params["include_scores"] %} - [Score](##Score) {% endif %}
-{% if params["include_confusion_matrix"] %}- [Confusion Matrix](##Confusion-Matrix) {% endif %}
+{% if params["include_confusion_matrix"] %} - [Confusion Matrix](##Confusion-Matrix) {% endif %}
 
 {% if params["include_scores"] %}
 ## Score

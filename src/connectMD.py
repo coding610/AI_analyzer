@@ -34,52 +34,33 @@ class MDConnection:
     def __replace_expressions(self, contents: str) -> str:
         contents = self.__apply_macros(contents)
 
-        tokens = self.__tokenize(contents)
-        tokens.sort(key=lambda d: (d['start_line'], d['start_char']))
-        for token in tokens:
-            print(token["match"].group(0))
-            print(token["match"].group(1))
-            print(token["match"].group(2))
-            print(token["match"].group(3))
-            print("-"*100)
-
-        # contents = re.sub(
-        # 	r"\{%\s*if\s*(.*?)\s*%\}(.*?)(?:\{%\s*else\s*%\}(.*?))?\{%\s*endif\s*%\}",
-        #     lambda match: self.__process_conditional(match),
-        #     contents,
-        #     flags=re.DOTALL
-        # );
-        # contents = re.sub(
-        #     r"\{\<(.*?)\>\}",
-        #     lambda match: self.__execute_expression(match),
-        #     contents,
-        #     flags=re.DOTALL
-        # );
-        # contents = re.sub(
-        #     r"\{\{(.*?)\}\}",
-        #     lambda match: self.__evaluate_expression(match),
-        #     contents,
-        #     flags=re.DOTALL
-        # )
+        for i in range(len(contents.split("\n"))):
+            contents = re.sub(
+                r"\{%\s*if\s*(.*?)\s*%\}(.*?)(?:\{%\s*else\s*%\}(.*?))?\{%\s*endif\s*%\}",
+                lambda match: self.__process_conditional(match),
+                "".join(contents.splitlines(True)[:i]),
+                flags=re.DOTALL,
+                count=1 # Only replace the first match
+            ) + "".join(contents.splitlines(True)[i:])
+            contents = re.sub(
+                r"\{\<(.*?)\>\}",
+                lambda match: self.__execute_expression(match),
+                "".join(contents.splitlines(True)[:i]),
+                flags=re.DOTALL,
+                count=1 # Only replace the first match
+            ) + "".join(contents.splitlines(True)[i:])
+            contents = re.sub(
+                r"\{\{(.*?)\}\}",
+                lambda match: self.__evaluate_expression(match),
+                "".join(contents.splitlines(True)[:i]),
+                flags=re.DOTALL,
+                count=1 # Only replace the first match
+            ) + "".join(contents.splitlines(True)[i:])
 
         return contents.replace(self.REMOVEME_SYNTAX + "\n", "").replace(self.REMOVEME_SYNTAX, "")
 
     def __apply_macros(self, contents: str) -> str:
         return contents.replace("self.__", "self._Analyzer__")
-
-    def __tokenize(self, contents: str) -> list[dict[str, Any]]:
-        matches_details = []
-        combined_pattern = r"\{%\s*if\s*(.*?)\s*%\}(.*?)(?:\{%\s*else\s*%\}(.*?))?\{%\s*endif\s*%\}|\{\<(.*?)\>\}|\{\{(.*?)\}\}"
-        for match in re.finditer(combined_pattern, contents, flags=re.DOTALL):
-            matches_details.append({
-                "start_line": contents.count("\n", 0, match.start()) + 1,
-                "end_line": contents.count("\n", 0, match.end()) + 1,
-                "start_char": match.start() - contents.rfind("\n", 0, match.start()),
-                "end_char": match.end() - contents.rfind("\n", 0, match.end()),
-                "match": match,
-            })
-
-        return matches_details
 
     def __process_conditional(self, match) -> str:
         # [0] -> if statement
