@@ -1,7 +1,6 @@
 import os
 import json
 import copy
-from typing import Optional
 
 import connectMD
 import utils
@@ -47,11 +46,12 @@ class Analyzer:
 
         connectMD.MDConnection(
             target_class=self,
-            target_members=connectMD.getmembers(self, locals()),
+            target_members=connectMD.getmembers(self, locals(), "params"),
             read_file=f"{self.STABLE_ROOT_DIR}/templates/comparison.md",
             write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}.md",
             connect=True
         )
+        
     ##########################
     ## OVERVIEW             ##
     ##########################
@@ -170,18 +170,24 @@ class Analyzer:
         with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "w") as f:
             json.dump(data, f, indent=4)
 
-    # These are API functions to be used in the markdown file
+    ##########################
+    ## API FOR MD           ##
+    ##########################
     # No runtime error policy for these
-    def __get_current_data(self):
+    def __get_current_data(self) -> dict:
         try:
             with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "r") as f:
                 return json.loads(f.read())
         except:
-            return None
+            return {}
 
-    def __get_data(self, model_name: str) -> Optional[str]:
+    def __get_data(self, model_name: str) -> dict:
         try:
             with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{model_name}/data.json", "r") as f:
                 return json.loads(f.read())
         except:
-            return None
+            return {}
+
+    def __data_exists(self, data_name: str, model_name1: str, model_name2: str) -> bool:
+        return data_name in self.__get_data(model_name1) and data_name in self.__get_data(model_name2)
+

@@ -1,29 +1,29 @@
 {<
 import os
 
-MNAME1 = params["model_name1"]
-MNAME2 = params["model_name2"] 
-print(MNAME1)
-print(MNAME2)
+model_name1 = params["model_name1"]
+model_name2 = params["model_name2"] 
 
-cmi = os.path.exists(f"{self.ROOT_DIR}/.AI_analyzer/{MNAME1}/confusion-matrix.png") and os.path.exists(f"{self.ROOT_DIR}/.AI_analyzer/{MNAME2}/confusion-matrix.png")
-scorei = "scores" in self.__get_data(MNAME1) and "scores" in self.__get_data(MNAME2)
+iscores = self.__data_exists("scores", model_name1, model_name2)
+icm     = self.__data_exists("confusion-matrix", model_name1, model_name2)
+iroc    = self.__data_exists("roc-curve", model_name1, model_name2)
 >}
 
-# Model Comparison: {{ MNAME1 }} and {{ MNAME2 }} 
+# Model Comparison: {{ model_name1 }} and {{ model_name2 }} 
 ## Table Of Contents
-{% if scorei %} - [Score](##Score-Comparison) {% endif %}
-{% if cmi %}- [Confusion Matrix Comparison](##Confusion-Matrix-Comparison) {% endif %}
+{% if iscores %} - [Score](##Score-Comparison) {% endif %}
+{% if icm %} - [Confusion Matrix Comparison](##Confusion-Matrix-Comparison) {% endif %}
+{% if iroc %} - [ROC Curve Comparison](##ROC-Curve-Comparison) {% endif %}
 
-{% if scorei %}
+{% if iscores %}
 
 {<
-scoresm1 = self.__get_data(MNAME1)["scores"]
-scoresm2 = self.__get_data(MNAME2)["scores"]
+scoresm1 = self.__get_data(model_name1)["scores"]
+scoresm2 = self.__get_data(model_name2)["scores"]
 >}
 
 ## Score Comparison
-| Type      | Score {{ MNAME1 }}          | Score {{ MNAME2 }}          | Offset                                              |
+| Type      | Score {{ model_name1 }}          | Score {{ model_name2 }}          | Offset                                    |
 |-----------|-----------------------------|-----------------------------|-----------------------------------------------------|
 | Accuracy  | {{ scoresm1["accuracy"]  }} | {{ scoresm2["accuracy"]  }} | {{ scoresm1["accuracy"]  - scoresm2["accuracy"]  }} |
 | Precision | {{ scoresm1["precision"] }} | {{ scoresm2["precision"] }} | {{ scoresm1["precision"] - scoresm2["precision"] }} |
@@ -32,11 +32,20 @@ scoresm2 = self.__get_data(MNAME2)["scores"]
 
 {% endif %}
 
-{% if cmi %}
+{% if icm %}
 
 ## Confusion Matrix Comparison
-Model {{ MNAME1 }}                                                      | Model {{ MNAME2 }}
+Model {{ model_name1 }}                                                      | Model {{ model_name2 }}
 :----------------------------------------------------------------------:|:--------------------------------------------------------------:
-![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ MNAME1 }}/confusion-matrix.png) | ![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ MNAME2 }}/confusion-matrix.png)
+![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ model_name1 }}/confusion-matrix.png) | ![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ model_name2 }}/confusion-matrix.png)
+
+{% endif %}
+
+{% if iroc %}
+
+## ROC Curve Comparison
+Model {{ model_name1 }}                                                      | Model {{ model_name2 }}
+:----------------------------------------------------------------------:|:--------------------------------------------------------------:
+![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ model_name1 }}/roc-curve.png) | ![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ model_name2 }}/roc-curve.png)
 
 {% endif %}

@@ -94,7 +94,7 @@ class MDConnection:
         except:
             print(f"Error at {linenum}:{charnum}:\n    Expression \"{expression}\" did not execute")
 
-def getmembers(object: object, extras: dict={}, extras_name: str = "params"):
+def getmembers(object: object, extras: dict={}, extras_name: str = "locals"):
     """
     For the object parameter pass "self".
     For the extras parameter, if requested, pass a dict of the requested items.

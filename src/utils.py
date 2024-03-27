@@ -4,6 +4,9 @@ import json
 def dprint(d: dict) -> None:
     print(json.dumps(d, indent=4, default=str))
 
+def dmerge(d1: dict, d2: dict):
+    return {**d1, **d2}
+
 def appendd(d1: dict, d2: dict) -> dict:
     d1.update(d2)
     return d1
