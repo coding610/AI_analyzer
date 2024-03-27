@@ -9,15 +9,16 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 from sklearn.metrics import (
-    confusion_matrix,
-    ConfusionMatrixDisplay,
-    roc_curve,
-    auc,
-    RocCurveDisplay,
     accuracy_score,
     f1_score,
     precision_score,
-    recall_score
+    recall_score,
+    ConfusionMatrixDisplay,
+    confusion_matrix,
+    RocCurveDisplay,
+    roc_curve,
+    auc,
+    PrecisionRecallDisplay
 )
 
 class Analyzer:
@@ -42,7 +43,7 @@ class Analyzer:
         if not os.path.exists(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons"):
             os.system(f"mkdir   {self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons")
         if not overwrite and os.path.exists(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}.md"):
-            raise Exception(f"Error: Trying to overwrite comparison {model_name1}-{model_name2}, but overwrite parameter is set to false.")
+            raise Exception(f"Error: Trying to overwrite comparison \"{model_name1}-{model_name2}\", but overwrite parameter is set to false.")
 
         connectMD.MDConnection(
             target_class=self,
@@ -62,9 +63,11 @@ class Analyzer:
         labels: list[str],
         model_name: str,
         plot_metrics: bool = False,
+        metrics_size: tuple[int, int] = (8, 8),
         include_scores: bool = True,
         include_confusion_matrix: bool = True,
         include_roc_curve: bool = True,
+        include_precision_recall_curve: bool = True,
         overwrite: bool = False # When enabled, it overwrites the model analyzation folder if it exists
     ):
         self.MODEL_NAME = model_name;
@@ -72,14 +75,15 @@ class Analyzer:
 
         self.__check_validility(model_name, overwrite)
         if include_scores: self.__write_scores(y_true, y_pred, plot_metrics)
-        if include_confusion_matrix: self.__write_confusion_matrix(y_true, y_pred, labels, plot_metrics)
-        if include_roc_curve: self.__write_roc_curve(y_true, y_pred, plot_metrics)
+        if include_confusion_matrix: self.__write_confusion_matrix(y_true, y_pred, labels, plot_metrics, metrics_size)
+        if include_roc_curve: self.__write_roc_curve(y_true, y_pred, plot_metrics, metrics_size)
+        if include_precision_recall_curve: self.__write_precision_recall_curve(y_true, y_pred, plot_metrics, metrics_size)
 
         if not plot_metrics: plt.close()
 
         connectMD.MDConnection(
             target_class=self,
-            target_members=connectMD.getmembers(self, locals()),
+            target_members=connectMD.getmembers(self, locals(), "params"),
             read_file=f"{self.STABLE_ROOT_DIR}/templates/overview.md",
             write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/result.md",
             connect=True
@@ -106,11 +110,38 @@ class Analyzer:
     ##########################
     ## METRICS              ##
     ##########################
-    def __write_roc_curve(self, y_true: np.ndarray | list, y_pred: np.ndarray | list, plot: bool) -> None:
+    def __write_precision_recall_curve(
+        self,
+        y_true: np.ndarray | list,
+        y_pred: np.ndarray | list,
+        plot: bool,
+        metrics_size: tuple[int, int]
+    ) -> None:
+        _, ax = plt.subplots(figsize=metrics_size)
+        display = PrecisionRecallDisplay.from_predictions(y_true, y_pred, name="LinearSVC", plot_chance_level=True, ax=ax)
+        _ = display.ax_.set_title("2-class Precision-Recall curve")
+
+        plt.savefig(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/precision-recall-curve.png")
+        if not plot: plt.close()
+
+        self.__dump_json({
+            "precision-recall-curve": { }
+        })
+
+    def __write_roc_curve(
+        self,
+        y_true: np.ndarray | list,
+        y_pred: np.ndarray | list,
+        plot: bool,
+        metrics_size: tuple[int, int]
+    ) -> None:
         fpr, tpr, _ = roc_curve(y_true, y_pred)
         roc_auc = auc(fpr, tpr)
-        RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=roc_auc).plot()
+
+        _, ax = plt.subplots(figsize=metrics_size)
+        RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=roc_auc).plot(ax=ax)
         plt.savefig(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/roc-curve.png")
+
         if not plot: plt.close()
 
         self.__dump_json({
@@ -121,14 +152,13 @@ class Analyzer:
             }
         })
 
-    def __write_confusion_matrix(self, y_true: np.ndarray | list, y_pred: np.ndarray | list, labels: list[str], plot: bool) -> None:
+    def __write_confusion_matrix(self, y_true: np.ndarray | list, y_pred: np.ndarray | list, labels: list[str], plot: bool, metrics_size: tuple[int, int]) -> None:
         conf_matrix = confusion_matrix(y_true, y_pred)
-        ConfusionMatrixDisplay(
-            confusion_matrix = conf_matrix,
-            display_labels   = labels
-        ).plot(cmap="copper")
 
+        _, ax = plt.subplots(figsize=metrics_size)
+        ConfusionMatrixDisplay(confusion_matrix = conf_matrix, display_labels = labels).plot(cmap="copper", ax=ax)
         plt.savefig(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/confusion-matrix.png") # semicolon here suppresses it from being shown
+
         if not plot: plt.close()
 
         # conf_matrix[x][y] is a np.float64, therefore the float(...)

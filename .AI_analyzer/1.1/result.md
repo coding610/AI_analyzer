@@ -3,15 +3,16 @@
  - [Score](##Score) 
  - [Confusion Matrix](##Confusion-Matrix) 
  - [ROC Curve](##ROC-Curve) 
+ - [Precision Recall Curve](##Precision-Recall-Curve) 
 
 
 ## Score
 | Type      | Score                         |
 |-----------|-------------------------------|
-| Accuracy  |  0.962    |
-| Precision |  0.962    |
-| Recall    |  0.965    |
-| F1-Score  |  0.964    |
+| Accuracy  |  0.93    |
+| Precision |  0.932    |
+| Recall    |  0.962    |
+| F1-Score  |  0.947    |
 
 
 
@@ -22,4 +23,9 @@
 
 ## ROC Curve
 ![ROC Curve](../../.AI_analyzer/1.1/roc-curve.png)
+
+
+
+## Precision Recall Curve
+![Precision Recall Curve](../../.AI_analyzer/1.1/precision-recall-curve.png)
 

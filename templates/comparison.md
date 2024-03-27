@@ -4,9 +4,10 @@ import os
 model_name1 = params["model_name1"]
 model_name2 = params["model_name2"] 
 
-iscores = self.__data_exists("scores", model_name1, model_name2)
-icm     = self.__data_exists("confusion-matrix", model_name1, model_name2)
-iroc    = self.__data_exists("roc-curve", model_name1, model_name2)
+iscores = self.__data_exists("scores",                  model_name1, model_name2)
+icm     = self.__data_exists("confusion-matrix",        model_name1, model_name2)
+iroc    = self.__data_exists("roc-curve",               model_name1, model_name2)
+iprc    = self.__data_exists("precision-recall-curve",  model_name1, model_name2)
 >}
 
 # Model Comparison: {{ model_name1 }} and {{ model_name2 }} 
@@ -14,6 +15,7 @@ iroc    = self.__data_exists("roc-curve", model_name1, model_name2)
 {% if iscores %} - [Score](##Score-Comparison) {% endif %}
 {% if icm %} - [Confusion Matrix Comparison](##Confusion-Matrix-Comparison) {% endif %}
 {% if iroc %} - [ROC Curve Comparison](##ROC-Curve-Comparison) {% endif %}
+{% if iprc %} - [Precision Recall Curve Comparison](##Precision-Recall-Curve-Comparison) {% endif %}
 
 {% if iscores %}
 
@@ -47,5 +49,14 @@ Model {{ model_name1 }}                                                      | M
 Model {{ model_name1 }}                                                      | Model {{ model_name2 }}
 :----------------------------------------------------------------------:|:--------------------------------------------------------------:
 ![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ model_name1 }}/roc-curve.png) | ![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ model_name2 }}/roc-curve.png)
+
+{% endif %}
+
+{% if iprc %}
+
+## Precision Recall Curve Comparison
+Model {{ model_name1 }}                                                      | Model {{ model_name2 }}
+:----------------------------------------------------------------------:|:--------------------------------------------------------------:
+![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ model_name1 }}/precision-recall-curve.png) | ![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ model_name2 }}/precision-recall-curve.png)
 
 {% endif %}

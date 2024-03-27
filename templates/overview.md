@@ -3,6 +3,7 @@
 {% if params["include_scores"] %} - [Score](##Score) {% endif %}
 {% if params["include_confusion_matrix"] %} - [Confusion Matrix](##Confusion-Matrix) {% endif %}
 {% if params["include_roc_curve"] %} - [ROC Curve](##ROC-Curve) {% endif %}
+{% if params["include_precision_recall_curve"] %} - [Precision Recall Curve](##Precision-Recall-Curve) {% endif %}
 
 {% if params["include_scores"] %}
 ## Score
@@ -23,4 +24,9 @@
 {% if params["include_roc_curve"] %}
 ## ROC Curve
 ![ROC Curve]({{ self.ROOT_DIR }}/.AI_analyzer/{{ self.MODEL_NAME }}/roc-curve.png)
+{% endif %}
+
+{% if params["include_precision_recall_curve"] %}
+## Precision Recall Curve
+![Precision Recall Curve]({{ self.ROOT_DIR }}/.AI_analyzer/{{ self.MODEL_NAME }}/precision-recall-curve.png)
 {% endif %}
