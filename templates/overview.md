@@ -15,6 +15,12 @@
 | Precision |  {{ scores["precision"] }}    |
 | Recall    |  {{ scores["recall"]    }}    |
 | F1-Score  |  {{ scores["f1-score"]  }}    |
+| MSE       |  {{ scores["MSE"]       }}    |
+| MAE       |  {{ scores["MAE"]       }}    |
+| RMSE      |  {{ scores["RMSE"]      }}    |
+| MEPA      |  {{ scores["MEPA"]      }}    |
+| Log Loss  |  {{ scores["log-loss"]  }}    |
+| R-Squared |  {{ scores["R-Squared"] }}    |
 {% endif %}
 
 {% if params["include_confusion_matrix"] %}

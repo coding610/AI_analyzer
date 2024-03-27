@@ -14,6 +14,12 @@
 | Precision |  0.932    |
 | Recall    |  0.962    |
 | F1-Score  |  0.947    |
+| MSE       |  0.07    |
+| MAE       |  0.07    |
+| RMSE      |  0.265    |
+| MEPA      |  205427351423917.38    |
+| log-loss  |  2.529    |
+| R-Squared |  0.693    |
 
 
 

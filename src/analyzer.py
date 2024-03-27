@@ -10,15 +10,21 @@ import numpy as np
 
 from sklearn.metrics import (
     accuracy_score,
-    f1_score,
+    log_loss,
+    mean_absolute_error,
+    mean_absolute_percentage_error,
     precision_score,
+    r2_score,
     recall_score,
+    f1_score,
+    mean_squared_error,
     ConfusionMatrixDisplay,
     confusion_matrix,
     RocCurveDisplay,
     roc_curve,
     auc,
-    PrecisionRecallDisplay
+    PrecisionRecallDisplay,
+    root_mean_squared_error
 )
 
 class Analyzer:
@@ -200,7 +206,13 @@ class Analyzer:
                 "accuracy": round(accuracy_score(y_true, y_pred), 3),
                 "precision": round(precision_score(y_true, y_pred), 3),
                 "recall": round(recall_score(y_true, y_pred), 3),
-                "f1-score": round(f1_score(y_true, y_pred), 3)
+                "f1-score": round(f1_score(y_true, y_pred), 3),
+                "MSE": round(mean_squared_error(y_true, y_pred), 3), # Average of all elements
+                "MAE": round(mean_absolute_error(y_true, y_pred), 3),
+                "RMSE": round(root_mean_squared_error(y_true, y_pred), 3),
+                "MEPA": round(mean_absolute_percentage_error(y_true, y_pred), 3),
+                "log-loss": round(log_loss(y_true, y_pred), 3),
+                "R-Squared": round(r2_score(y_true, y_pred), 3), # Ignore this silly error
             }
         }, plot, "scores")
 
