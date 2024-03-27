@@ -10,16 +10,16 @@
 ## Score
 | Type      | Score                         |
 |-----------|-------------------------------|
-| Accuracy  |  0.954    |
-| Precision |  0.962    |
-| Recall    |  0.967    |
-| F1-Score  |  0.965    |
-| MSE       |  0.046    |
-| MAE       |  0.046    |
-| RMSE      |  0.214    |
-| MAPE      |  110614727689801.66    |
-| Log Loss  |  1.644    |
-| R-Squared |  0.801    |
+| Accuracy  |  0.849    |
+| Precision |  0.854    |
+| Recall    |  0.838    |
+| F1-Score  |  0.846    |
+| MSE       |  0.151    |
+| MAE       |  0.151    |
+| RMSE      |  0.389    |
+| MAPE      |  318854853617831.25    |
+| Log Loss  |  5.443    |
+| R-Squared |  0.396    |
 
 
 

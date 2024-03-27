@@ -27,18 +27,18 @@ scoresm2 = self.__get_data(model_name2)["scores"]
 >}
 
 ## Score Comparison
-| Type      | Score {{ model_name1 }}     | Score {{ model_name2 }}     | Offset                                              |
-|-----------|-----------------------------|-----------------------------|-----------------------------------------------------|
-| Accuracy  | {{ scoresm1["accuracy"]  }} | {{ scoresm2["accuracy"]  }} | {{ scoresm1["accuracy"]  - scoresm2["accuracy"]  }} |
-| Precision | {{ scoresm1["precision"] }} | {{ scoresm2["precision"] }} | {{ scoresm1["precision"] - scoresm2["precision"] }} |
-| Recall    | {{ scoresm1["recall"]    }} | {{ scoresm2["recall"]    }} | {{ scoresm1["recall"]    - scoresm2["recall"]    }} |
-| F1-Score  | {{ scoresm1["f1-score"]  }} | {{ scoresm2["f1-score"]  }} | {{ scoresm1["f1-score"]  - scoresm2["f1-score"]  }} |
-| MSE       | {{ scoresm1["MSE"]       }} | {{ scoresm2["MSE"]       }} | {{ scoresm1["MSE"]       - scoresm2["MSE"]       }} |
-| MAE       | {{ scoresm1["MAE"]       }} | {{ scoresm2["MAE"]       }} | {{ scoresm1["MAE"]       - scoresm2["MAE"]       }} |
-| RMSE      | {{ scoresm1["RMSE"]      }} | {{ scoresm2["RMSE"]      }} | {{ scoresm1["RMSE"]      - scoresm2["RMSE"]      }} |
-| MAPE      | {{ scoresm1["MAPE"]      }} | {{ scoresm2["MAPE"]      }} | {{ scoresm1["MAPE"]      - scoresm2["MAPE"]      }} |
-| Log Loss  | {{ scoresm1["log-loss"]  }} | {{ scoresm2["log-loss"]  }} | {{ scoresm1["log-loss"]  - scoresm2["log-loss"]  }} |
-| R-Squared | {{ scoresm1["R-Squared"] }} | {{ scoresm2["R-Squared"] }} | {{ scoresm1["R-Squared"] - scoresm2["R-Squared"] }} |
+| Type      | Score {{ model_name1 }}     | Score {{ model_name2 }}     | Offset                                                        |
+|-----------|-----------------------------|-----------------------------|---------------------------------------------------------------|
+| Accuracy  | {{ scoresm1["accuracy"]  }} | {{ scoresm2["accuracy"]  }} | {{ round(scoresm1["accuracy"]  - scoresm2["accuracy"], 3)  }} |
+| Precision | {{ scoresm1["precision"] }} | {{ scoresm2["precision"] }} | {{ round(scoresm1["precision"] - scoresm2["precision"], 3) }} |
+| Recall    | {{ scoresm1["recall"]    }} | {{ scoresm2["recall"]    }} | {{ round(scoresm1["recall"]    - scoresm2["recall"], 3)    }} |
+| F1-Score  | {{ scoresm1["f1-score"]  }} | {{ scoresm2["f1-score"]  }} | {{ round(scoresm1["f1-score"]  - scoresm2["f1-score"], 3)  }} |
+| MSE       | {{ scoresm1["MSE"]       }} | {{ scoresm2["MSE"]       }} | {{ round(scoresm1["MSE"]       - scoresm2["MSE"], 3)       }} |
+| MAE       | {{ scoresm1["MAE"]       }} | {{ scoresm2["MAE"]       }} | {{ round(scoresm1["MAE"]       - scoresm2["MAE"], 3)       }} |
+| RMSE      | {{ scoresm1["RMSE"]      }} | {{ scoresm2["RMSE"]      }} | {{ round(scoresm1["RMSE"]      - scoresm2["RMSE"], 3)      }} |
+| MAPE      | {{ scoresm1["MAPE"]      }} | {{ scoresm2["MAPE"]      }} | {{ round(scoresm1["MAPE"]      - scoresm2["MAPE"], 3)      }} |
+| Log Loss  | {{ scoresm1["log-loss"]  }} | {{ scoresm2["log-loss"]  }} | {{ round(scoresm1["log-loss"]  - scoresm2["log-loss"], 3)  }} |
+| R-Squared | {{ scoresm1["R-Squared"] }} | {{ scoresm2["R-Squared"] }} | {{ round(scoresm1["R-Squared"] - scoresm2["R-Squared"], 3) }} |
 
 {% endif %}
 
