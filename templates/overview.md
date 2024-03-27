@@ -2,6 +2,7 @@
 ## Table Of Contents
 {% if params["include_scores"] %} - [Score](##Score) {% endif %}
 {% if params["include_confusion_matrix"] %} - [Confusion Matrix](##Confusion-Matrix) {% endif %}
+{% if params["include_roc_curve"] %} - [ROC Curve](##ROC-Curve) {% endif %}
 
 {% if params["include_scores"] %}
 ## Score
@@ -17,4 +18,9 @@
 {% if params["include_confusion_matrix"] %}
 ## Confusion Matrix
 ![Confusion Matrix]({{ self.ROOT_DIR }}/.AI_analyzer/{{ self.MODEL_NAME }}/confusion-matrix.png)
+{% endif %}
+
+{% if params["include_roc_curve"] %}
+## ROC Curve
+![ROC Curve]({{ self.ROOT_DIR }}/.AI_analyzer/{{ self.MODEL_NAME }}/roc-curve.png)
 {% endif %}

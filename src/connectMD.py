@@ -1,9 +1,6 @@
 import re
 import inspect
-import sys
-
 import utils
-from utils import err
 
 
 """
@@ -87,14 +84,14 @@ class MDConnection:
     def __eval(self, expression: str, linenum: int, charnum: int) -> str | None:
         try:
             return eval(expression, self.target_members)
-        except Exception as e:
+        except:
             print(f"Error at {linenum}:{charnum}:\n    Expression \"{expression}\" did not evaluate")
             return expression
 
     def __exec(self, expression: str, linenum: int, charnum: int) -> None:
         try:
             exec(expression, self.target_members)
-        except Exception as e:
+        except:
             print(f"Error at {linenum}:{charnum}:\n    Expression \"{expression}\" did not execute")
 
 def getmembers(object: object, extras: dict={}, extras_name: str = "params"):
@@ -103,7 +100,6 @@ def getmembers(object: object, extras: dict={}, extras_name: str = "params"):
     For the extras parameter, if requested, pass a dict of the requested items.
     If the extras paramater should be a function parameter, pass "locals()"
     """
-
     return utils.appendd({
         name : value for name, value in inspect.getmembers_static(object)
     }, {extras_name: extras} )

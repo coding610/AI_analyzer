@@ -2,18 +2,24 @@
 ## Table Of Contents
  - [Score](##Score) 
  - [Confusion Matrix](##Confusion-Matrix) 
+ - [ROC Curve](##ROC-Curve) 
 
 
 ## Score
 | Type      | Score                         |
 |-----------|-------------------------------|
-| Accuracy  |  scores["accuracy"]    |
-| Precision |  scores["precision"]    |
-| Recall    |  scores["recall"]    |
-| F1-Score  |  scores["f1-score"]    |
+| Accuracy  |  0.962    |
+| Precision |  0.962    |
+| Recall    |  0.965    |
+| F1-Score  |  0.964    |
 
 
 
 ## Confusion Matrix
-![Confusion Matrix](sself.ROOT_DIR/.AI_analyzer/1.0/confusion-matrix.png)
+![Confusion Matrix](../../.AI_analyzer/1.0/confusion-matrix.png)
+
+
+
+## ROC Curve
+![ROC Curve](../../.AI_analyzer/1.0/roc-curve.png)
 

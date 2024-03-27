@@ -3,13 +3,23 @@ import json
 import copy
 from typing import Optional
 
-import utils
 import connectMD
+import utils
 
 from matplotlib import pyplot as plt
 import numpy as np
 
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, f1_score, precision_score, recall_score
+from sklearn.metrics import (
+    confusion_matrix,
+    ConfusionMatrixDisplay,
+    roc_curve,
+    auc,
+    RocCurveDisplay,
+    accuracy_score,
+    f1_score,
+    precision_score,
+    recall_score
+)
 
 class Analyzer:
     def __init__(self, root_dir: str = ".") -> None:
@@ -54,6 +64,7 @@ class Analyzer:
         plot_metrics: bool = False,
         include_scores: bool = True,
         include_confusion_matrix: bool = True,
+        include_roc_curve: bool = True,
         overwrite: bool = False # When enabled, it overwrites the model analyzation folder if it exists
     ):
         self.MODEL_NAME = model_name;
@@ -62,6 +73,9 @@ class Analyzer:
         self.__check_validility(model_name, overwrite)
         if include_scores: self.__write_scores(y_true, y_pred, plot_metrics)
         if include_confusion_matrix: self.__write_confusion_matrix(y_true, y_pred, labels, plot_metrics)
+        if include_roc_curve: self.__write_roc_curve(y_true, y_pred, plot_metrics)
+
+        if not plot_metrics: plt.close()
 
         connectMD.MDConnection(
             target_class=self,
@@ -92,26 +106,32 @@ class Analyzer:
     ##########################
     ## METRICS              ##
     ##########################
-    def __write_confusion_matrix(
-        self,
-        y_true: np.ndarray | list,
-        y_pred: np.ndarray | list,
-        labels: list[str],
-        plot: bool
-    ) -> None:
-        if not plot: plt.ioff()
+    def __write_roc_curve(self, y_true: np.ndarray | list, y_pred: np.ndarray | list, plot: bool) -> None:
+        fpr, tpr, _ = roc_curve(y_true, y_pred)
+        roc_auc = auc(fpr, tpr)
+        RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=roc_auc).plot()
+        plt.savefig(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/roc-curve.png")
+        if not plot: plt.close()
 
+        self.__dump_json({
+            "roc-curve": {
+                "fpr": list(fpr),
+                "tpr": list(tpr),
+                "roc_auc": float(roc_auc)
+            }
+        })
+
+    def __write_confusion_matrix(self, y_true: np.ndarray | list, y_pred: np.ndarray | list, labels: list[str], plot: bool) -> None:
         conf_matrix = confusion_matrix(y_true, y_pred)
         ConfusionMatrixDisplay(
             confusion_matrix = conf_matrix,
             display_labels   = labels
         ).plot(cmap="copper")
 
-        plt.savefig(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/confusion-matrix.png")
+        plt.savefig(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/confusion-matrix.png") # semicolon here suppresses it from being shown
+        if not plot: plt.close()
 
-        if not plot: plt.ion()
-
-        # int(...) because its int64 (numpy int)
+        # conf_matrix[x][y] is a np.float64, therefore the float(...)
         self.__dump_json({
             "confusion-matrix": {
                 "0-0": float(conf_matrix[0][0]),
@@ -135,8 +155,7 @@ class Analyzer:
     ## UTILITIES            ##
     ##########################
     def __dump_json(self, new_data: dict, print_data: bool = False, key: str = ""):
-        if print_data:
-            print(json.dumps(new_data[key], indent=4, default=str))
+        if print_data: utils.dprint(new_data[key])
 
         with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "r+") as f:
             if f.read() == "":
@@ -151,9 +170,14 @@ class Analyzer:
         with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "w") as f:
             json.dump(data, f, indent=4)
 
+    # These are API functions to be used in the markdown file
+    # No runtime error policy for these
     def __get_current_data(self):
-        with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "r") as f:
-            return json.loads(f.read())
+        try:
+            with open(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/data.json", "r") as f:
+                return json.loads(f.read())
+        except:
+            return None
 
     def __get_data(self, model_name: str) -> Optional[str]:
         try:
