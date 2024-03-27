@@ -18,7 +18,7 @@
 | MSE       |  {{ scores["MSE"]       }}    |
 | MAE       |  {{ scores["MAE"]       }}    |
 | RMSE      |  {{ scores["RMSE"]      }}    |
-| MEPA      |  {{ scores["MEPA"]      }}    |
+| MAPE      |  {{ scores["MAPE"]      }}    |
 | Log Loss  |  {{ scores["log-loss"]  }}    |
 | R-Squared |  {{ scores["R-Squared"] }}    |
 {% endif %}

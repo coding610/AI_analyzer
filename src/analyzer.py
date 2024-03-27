@@ -54,7 +54,7 @@ class Analyzer:
         connectMD.MDConnection(
             target_class=self,
             target_members=connectMD.getmembers(self, locals(), "params"),
-            read_file=f"{self.STABLE_ROOT_DIR}/templates/comparison.md",
+            read_file=f"{self.STABLE_ROOT_DIR}/templates/comparison.conmd",
             write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}.md",
             connect=True
         )
@@ -91,7 +91,7 @@ class Analyzer:
         connectMD.MDConnection(
             target_class=self,
             target_members=connectMD.getmembers(self, locals(), "params"),
-            read_file=f"{self.STABLE_ROOT_DIR}/templates/overview.md",
+            read_file=f"{self.STABLE_ROOT_DIR}/templates/overview.conmd",
             write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/result.md",
             connect=True
         )
@@ -210,7 +210,7 @@ class Analyzer:
                 "MSE": round(mean_squared_error(y_true, y_pred), 3), # Average of all elements
                 "MAE": round(mean_absolute_error(y_true, y_pred), 3),
                 "RMSE": round(root_mean_squared_error(y_true, y_pred), 3),
-                "MEPA": round(mean_absolute_percentage_error(y_true, y_pred), 3),
+                "MAPE": round(mean_absolute_percentage_error(y_true, y_pred), 3),
                 "log-loss": round(log_loss(y_true, y_pred), 3),
                 "R-Squared": round(r2_score(y_true, y_pred), 3), # Ignore this silly error
             }
