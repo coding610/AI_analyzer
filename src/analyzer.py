@@ -68,18 +68,19 @@ class Analyzer:
         include_confusion_matrix: bool = True,
         include_roc_curve: bool = True,
         include_precision_recall_curve: bool = True,
+        include_residual_plot: bool = True,
         overwrite: bool = False # When enabled, it overwrites the model analyzation folder if it exists
     ):
         self.MODEL_NAME = model_name;
         self.ROOT_DIR = os.path.relpath(self.STABLE_ROOT_DIR, f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}")
 
         self.__check_validility(model_name, overwrite)
+
         if include_scores: self.__write_scores(y_true, y_pred, plot_metrics)
         if include_confusion_matrix: self.__write_confusion_matrix(y_true, y_pred, labels, plot_metrics, metrics_size)
         if include_roc_curve: self.__write_roc_curve(y_true, y_pred, plot_metrics, metrics_size)
         if include_precision_recall_curve: self.__write_precision_recall_curve(y_true, y_pred, plot_metrics, metrics_size)
-
-        if not plot_metrics: plt.close()
+        if include_residual_plot: self.__write_residual_plot(y_true, y_pred, plot_metrics, metrics_size)
 
         connectMD.MDConnection(
             target_class=self,
@@ -110,6 +111,28 @@ class Analyzer:
     ##########################
     ## METRICS              ##
     ##########################
+    def __write_residual_plot(
+        self,
+        y_true: np.ndarray | list,
+        y_pred: np.ndarray | list,
+        plot_metrics: bool,
+        metrics_size: tuple[int, int]
+    ):
+        residuals = np.subtract(y_true, y_pred)
+        plt.figure(figsize=metrics_size)
+        plt.scatter(y_pred, residuals, alpha=0.5)
+        plt.axhline(y=0, color='r', linestyle='--')
+        plt.xlabel('Predicted Values')
+        plt.ylabel('Residuals')
+        plt.title('Residual Plot')
+        plt.savefig(f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/residual-plot.png")
+
+        if not plot_metrics: plt.close()
+
+        self.__dump_json({
+            "residual-plot": { }
+        })
+
     def __write_precision_recall_curve(
         self,
         y_true: np.ndarray | list,

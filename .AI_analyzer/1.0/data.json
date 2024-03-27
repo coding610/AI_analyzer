@@ -24,5 +24,6 @@
         ],
         "roc_auc": 0.9166218252260008
     },
-    "precision-recall-curve": {}
+    "precision-recall-curve": {},
+    "residual-plot": {}
 }
