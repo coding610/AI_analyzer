@@ -8,6 +8,7 @@ iscores = self.__data_exists("scores",                  model_name1, model_name2
 icm     = self.__data_exists("confusion-matrix",        model_name1, model_name2)
 iroc    = self.__data_exists("roc-curve",               model_name1, model_name2)
 iprc    = self.__data_exists("precision-recall-curve",  model_name1, model_name2)
+irp     = self.__data_exists("residual-plot",           model_name1, model_name2)
 >}
 
 # Model Comparison: {{ model_name1 }} and {{ model_name2 }} 
@@ -16,6 +17,7 @@ iprc    = self.__data_exists("precision-recall-curve",  model_name1, model_name2
 {% if icm %} - [Confusion Matrix Comparison](##Confusion-Matrix-Comparison) {% endif %}
 {% if iroc %} - [ROC Curve Comparison](##ROC-Curve-Comparison) {% endif %}
 {% if iprc %} - [Precision Recall Curve Comparison](##Precision-Recall-Curve-Comparison) {% endif %}
+{% if irp %} - [Residual Plot Comparison](##Residual-Plot-Comparison) {% endif %}
 
 {% if iscores %}
 
@@ -58,5 +60,14 @@ Model {{ model_name1 }}                                                      | M
 Model {{ model_name1 }}                                                      | Model {{ model_name2 }}
 :----------------------------------------------------------------------:|:--------------------------------------------------------------:
 ![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ model_name1 }}/precision-recall-curve.png) | ![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ model_name2 }}/precision-recall-curve.png)
+
+{% endif %}
+
+{% if irp %}
+
+## Residual Plot Comparison
+Model {{ model_name1 }}                                                      | Model {{ model_name2 }}
+:----------------------------------------------------------------------:|:--------------------------------------------------------------:
+![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ model_name1 }}/residual-plot.png) | ![]({{ self.ROOT_DIR }}/.AI_analyzer/{{ model_name2 }}/residual-plot.png)
 
 {% endif %}

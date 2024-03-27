@@ -4,6 +4,7 @@
  - [Confusion Matrix](##Confusion-Matrix) 
  - [ROC Curve](##ROC-Curve) 
  - [Precision Recall Curve](##Precision-Recall-Curve) 
+ - [Residual Plot](##Residual-Plot) 
 
 
 ## Score
@@ -28,4 +29,9 @@
 
 ## Precision Recall Curve
 ![Precision Recall Curve](../../.AI_analyzer/1.0/precision-recall-curve.png)
+
+
+
+## Residual Plot
+![Residual Plot](../../.AI_analyzer/1.0/residual-plot.png)
 
