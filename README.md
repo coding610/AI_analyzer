@@ -15,8 +15,8 @@ or scores when using this libary.
 
 ## How?
 It isn't hard to implement this kind of stuff, and there is 100% 
-a libary out there that does the same thing. But for this I had
-some fun with this. I created template markdown files that has my own
+a libary out there that does the same thing. But for this, I had
+some fun. I created template markdown files that has my own
 python integration with it. Its able to connect to a class and
 get all of its members and methods and spit it out into the file. Its pretty cool!
 To have a closer look, take a look at the templates folder.
