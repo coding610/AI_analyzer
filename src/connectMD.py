@@ -9,7 +9,7 @@ that regex is really awesome
 """
 
 class MDConnection:
-    def __init__(self, target_class: object, target_members: dict, read_file: str, write_file: str, connect: bool = False) -> None:
+    def __init__(self, target_class: object, target_members: dict, read_file: str, write_file: str) -> None:
         self.REMOVEME_SYNTAX = "{[{!REMOVEME!}]}"
 
         self.target_class: object = target_class
@@ -18,8 +18,6 @@ class MDConnection:
         self.write_file: str = write_file
 
         self.target_members["self"] = self.target_class
-
-        if connect: self.connect()
 
     def connect(self) -> str | None:
         with open(self.read_file, "r") as f:

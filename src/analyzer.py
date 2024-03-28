@@ -55,9 +55,8 @@ class Analyzer:
             target_class=self,
             target_members=connectMD.getmembers(self, locals(), "params"),
             read_file=f"{self.STABLE_ROOT_DIR}/templates/comparison.conmd",
-            write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}.md",
-            connect=True
-        )
+            write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/comparisons/{model_name1}-{model_name2}.md"
+        ).connect()
         
     ##########################
     ## OVERVIEW             ##
@@ -92,9 +91,8 @@ class Analyzer:
             target_class=self,
             target_members=connectMD.getmembers(self, locals(), "params"),
             read_file=f"{self.STABLE_ROOT_DIR}/templates/overview.conmd",
-            write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/result.md",
-            connect=True
-        )
+            write_file=f"{self.STABLE_ROOT_DIR}/.AI_analyzer/{self.MODEL_NAME}/result.md"
+        ).connect()
 
     ##########################
     ## HELPERS              ##
